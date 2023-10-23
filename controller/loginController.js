@@ -18,21 +18,21 @@ const loginUser = async(req, res)=>{
     const match = await bcrypt.compare(password, foundUser.password)
     console.log(match)
     if (match) { 
-        const accessToken = jwt.sign(
-            { "email": foundUser.email },
-            process.env.ACCESS_TOKEN_SECRET,
-            { expiresIn: '30s' }
-        );
-        const refreshToken = jwt.sign(
-            { "email": foundUser.email },
-            process.env.REFRESH_TOKEN_SECRET,
-            { expiresIn: '1d'  }
-        );
-        const otherUsers = User.filter(user => user.email !== foundUser.email);
-        const currentUser = { ...foundUser, refreshToken}
-        Users.setUsers([...otherUsers, currentUser])
-        // await Users.insert()
-        res.cookie('jwt', refreshToken, { httpOnly: true, maxAge: 24* 60 * 60 * 1000 })
+        // const accessToken = jwt.sign(
+        //     { "email": foundUser.email },
+        //     process.env.ACCESS_TOKEN_SECRET,
+        //     { expiresIn: '30s' }
+        // );
+        // const refreshToken = jwt.sign(
+        //     { "email": foundUser.email },
+        //     process.env.REFRESH_TOKEN_SECRET,
+        //     { expiresIn: '1d'  }
+        // );
+        // const otherUsers = User.filter(user => user.email !== foundUser.email);
+        // const currentUser = { ...foundUser, refreshToken}
+        // Users.setUsers([...otherUsers, currentUser])
+        // // await Users.insert()
+        // res.cookie('jwt', refreshToken, { httpOnly: true, maxAge: 24* 60 * 60 * 1000 })
         res.json({ "Success": `${foundUser.fullName} is logged in...`  })
     }else{
         res.sendStatus(401)
