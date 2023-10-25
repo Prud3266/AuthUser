@@ -22,6 +22,7 @@ dotenv.config({path: './.env'})
 app.use('/signup', require('./routes/signup.js'))
 app.use('/login', require('./routes/login.js'))
 app.use('/refresh', require('./routes/refresh.js'))
+app.use('/logout', require('./routes/logout.js'))
 
 app.use(verifyJWT)
 app.use('/users', require('./routes/users.js'))
