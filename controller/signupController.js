@@ -8,7 +8,7 @@ const User = require('../models/Users')
 
 const signupUser = async(req, res)=>{
     const { fullName, email, phoneNumber, password } = req.body
-    console.log(req.body);
+    console.log("Request Body String:",req.body);
     if(!email || !password) return res.status(400).json({ 'message': 'Email and password are required'});
 
     // check if the email is valid
@@ -26,14 +26,12 @@ const signupUser = async(req, res)=>{
     if (duplicate) return res.status(409).json({ message: `${Email} already exist...` }); 
     try {
         const hashedPassword = await bcrypt.hash(password, 10)  
-        console.log(email, " and ", password)           
         const newUser = await User.create({
             "fullName": fullName,
             "email": Email,
             "phoneNumber": phoneNumber,
             "password": hashedPassword,         
         }) 
-        console.log(newUser);
         res.status(201).json(newUser)
     } catch (error) {
         res.status(500).json({ 'message': error.message });
