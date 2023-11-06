@@ -5,14 +5,15 @@ const jwt = require('jsonwebtoken')
 const cookieParser = require('cookie-parser')
 const path = require('path')
 const User = require('../models/Users')
+const { phone } = require('phone')
 
 const signupUser = async(req, res)=>{
     const { fullName, email, phoneNumber, password } = req.body
-    console.log("Request Body String:",req.body);
     if(!email || !password) return res.status(400).json({ 'message': 'Email and password are required'});
-
     // check if the email is valid
     const Email = email.toLowerCase()
+    const phone_number = '+234'+phoneNumber.slice(1)
+    if(!phone(phone_number).isValid) return res.status(400).json({ 'message': 'Phone number is wrong'});
     let Valid = false
     let characters = new RegExp('[a-z0-9]+@[a-z]+\.[a-z]{2,3}');
     let testEmails = [Email];
@@ -29,10 +30,17 @@ const signupUser = async(req, res)=>{
         const newUser = await User.create({
             "fullName": fullName,
             "email": Email,
-            "phoneNumber": phoneNumber,
+            "phoneNumber": phone_number,
             "password": hashedPassword,         
         }) 
-        res.status(201).json(newUser)
+        const resp = {
+            "Status": 'Account Successfully Created!',
+            "fullName": fullName,
+            "email": Email,
+            "phoneNumber": phone_number,
+        }
+        // res.json(newUser)
+        res.status(201).json(resp)
     } catch (error) {
         res.status(500).json({ 'message': error.message });
     }
